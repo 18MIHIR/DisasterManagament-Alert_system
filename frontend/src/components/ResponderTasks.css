@@ -1,0 +1,136 @@
+.responder-tasks {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.responder-tasks-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0 0 16px 0;
+}
+
+.responder-tasks-loading,
+.responder-tasks-empty {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.responder-tasks-error {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.responder-tasks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.responder-task-item {
+  background: #0e1113;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.responder-task-item:last-child {
+  margin-bottom: 0;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.task-disaster {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.task-status-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.task-status-badge.assigned {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.task-status-badge.acknowledged {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.task-status-badge.in_progress {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.task-status-badge.completed {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.task-location {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 8px;
+}
+
+.task-desc {
+  font-size: 13px;
+  color: #d1d5db;
+  margin-bottom: 8px;
+}
+
+.task-meta {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ack-btn,
+.status-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+
+.ack-btn {
+  background: #10b981;
+  color: #022c22;
+}
+
+.ack-btn:hover {
+  opacity: 0.9;
+}
+
+.status-btn {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.status-btn.complete {
+  background: #059669;
+}
