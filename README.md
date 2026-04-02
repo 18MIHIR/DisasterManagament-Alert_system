@@ -151,9 +151,31 @@ The system automatically fetches real-time disaster data from:
 
 ---
 
-### 3. Next milestones
+### 3. Analytics & Alert Systems (Completed)
 
-- Add entities/controllers for **alerts**, **rescue_tasks**, **reports**
-- Implement push notifications for critical alerts
-- Add geo-mapped views with interactive maps
-- Role-based access control refinements
+## Milestone 3: Alert Validation & Dispatch Systems
+
+### New Features
+
+#### Alert Broadcasting
+- Separate `Alert` entity linking disasters to geographical regions.
+- Zone-based dynamic broadcasting based on user location and disaster's location.
+- Automatic dispatching to citizens upon verification.
+
+#### Rescue Task Assignments (Responders)
+- Admin can assign responders to specific disaster zones.
+- Responders have dedicated dashboards with a Task List.
+- Acknowledge system with state tracking (`ASSIGNED`, `ACKNOWLEDGED`, `IN_PROGRESS`, `COMPLETED`).
+
+#### Citizen Emergency Reporting
+- Dedicated "Request Help" forms for Citizens.
+- Spatial-routing of incident requests to the nearest available responders.
+- Real-time DB tracking and status tracking.
+
+## Milestone 4: Interactive Analytics & KPIs
+
+### Enhanced Data Visualization
+- Integration of `recharts` for dynamic data visualizations.
+- Dashboard for viewing Disasters Trends, Category Breakdowns, and Alerts by Region.
+- Performance KPI tracking including responder acknowledgement times and engagement rates.
+- Fully responsive, premium UI.
