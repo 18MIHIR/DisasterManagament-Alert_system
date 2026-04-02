@@ -12,9 +12,10 @@ import './Dashboard.css';
 
 interface DashboardProps {
   userRole: string | null;
+  onOpenRescue?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ userRole }) => {
+const Dashboard: React.FC<DashboardProps> = ({ userRole, onOpenRescue }) => {
   const [disasters, setDisasters] = useState<Disaster[]>([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -151,6 +152,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userRole }) => {
   const isResponder = userRole === 'RESPONDER';
   const isCitizen = userRole === 'CITIZEN';
   const canReport = isAdmin || isResponder;
+  const canRescueOps = isAdmin || isResponder;
 
   return (
     <div className="dashboard">
@@ -171,6 +173,11 @@ const Dashboard: React.FC<DashboardProps> = ({ userRole }) => {
               onClick={() => { setError(null); setShowReportForm(true); }}
             >
               Report Disaster
+            </button>
+          )}
+          {canRescueOps && onOpenRescue && (
+            <button type="button" className="refresh-btn rescue-ops-link" onClick={onOpenRescue}>
+              Rescue Operations
             </button>
           )}
           {isAdmin && (

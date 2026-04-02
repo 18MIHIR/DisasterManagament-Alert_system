@@ -1,4 +1,4 @@
-import { Disaster, DashboardStats, DisasterFilters, Alert, RescueTask, Report, UserProfile } from './types';
+import { Disaster, DashboardStats, DisasterFilters, Alert, RescueTask, Report, UserProfile, RescueZone } from './types';
 
 export const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -186,17 +186,43 @@ export const alertApi = {
   },
 };
 
+export const rescueZoneApi = {
+  async list(): Promise<RescueZone[]> {
+    const response = await fetch(`${API_BASE_URL}/rescue-zones`, { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to fetch zones');
+    return response.json();
+  },
+};
+
 export const rescueTaskApi = {
+  async listActiveForMap(): Promise<RescueTask[]> {
+    const response = await fetch(`${API_BASE_URL}/rescue-tasks`, { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to fetch rescue tasks');
+    return response.json();
+  },
   async getMyTasks(): Promise<RescueTask[]> {
     const response = await fetch(`${API_BASE_URL}/rescue-tasks/my-tasks`, { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch tasks');
     return response.json();
   },
-  async create(responderId: number, disasterId: number, description?: string): Promise<RescueTask> {
+  async create(
+    responderId: number,
+    disasterId: number,
+    description?: string,
+    zoneId?: number,
+    rescueSiteLatitude?: number,
+    rescueSiteLongitude?: number
+  ): Promise<RescueTask> {
+    const body: Record<string, unknown> = { responderId, disasterId, description };
+    if (zoneId != null) body.zoneId = zoneId;
+    if (rescueSiteLatitude != null && rescueSiteLongitude != null) {
+      body.rescueSiteLatitude = rescueSiteLatitude;
+      body.rescueSiteLongitude = rescueSiteLongitude;
+    }
     const response = await fetch(`${API_BASE_URL}/rescue-tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify({ responderId, disasterId, description }),
+      body: JSON.stringify(body),
     });
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
@@ -228,11 +254,17 @@ export const rescueTaskApi = {
 };
 
 export const reportApi = {
-  async create(details: string, disasterId?: number, location?: string): Promise<Report> {
+  async create(
+    details: string,
+    disasterId?: number,
+    location?: string,
+    latitude?: number,
+    longitude?: number
+  ): Promise<Report> {
     const response = await fetch(`${API_BASE_URL}/reports`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify({ details, disasterId, location }),
+      body: JSON.stringify({ details, disasterId, location, latitude, longitude }),
     });
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
@@ -248,6 +280,36 @@ export const reportApi = {
   async getAssignedToMe(): Promise<Report[]> {
     const response = await fetch(`${API_BASE_URL}/reports/assigned-to-me`, { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch assigned reports');
+    return response.json();
+  },
+  async createIncident(payload: {
+    details: string;
+    disasterId?: number;
+    rescueTaskId?: number;
+    location?: string;
+    latitude?: number;
+    longitude?: number;
+    imageData?: string;
+  }): Promise<Report> {
+    const response = await fetch(`${API_BASE_URL}/reports/incident`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to submit incident report');
+    }
+    return response.json();
+  },
+  async audit(): Promise<Report[]> {
+    const response = await fetch(`${API_BASE_URL}/reports/audit`, { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to fetch audit trail');
+    return response.json();
+  },
+  async getById(id: number): Promise<Report> {
+    const response = await fetch(`${API_BASE_URL}/reports/${id}`, { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to fetch report');
     return response.json();
   },
 };

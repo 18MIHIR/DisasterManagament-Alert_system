@@ -69,6 +69,28 @@
   gap: 16px;
 }
 
+.report-geo-btn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.report-geo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.report-coords-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #86efac;
+}
+
 .report-form-group {
   flex: 1;
   margin-bottom: 16px;

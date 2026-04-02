@@ -21,6 +21,14 @@ public class RescueTask {
     @JoinColumn(name = "disaster_id", nullable = false)
     private Disaster disaster;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "zone_id")
+    private RescueZone zone;
+
+    private Double rescueSiteLatitude;
+
+    private Double rescueSiteLongitude;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "task_status", nullable = false)
     private TaskStatus taskStatus = TaskStatus.ASSIGNED;
@@ -66,4 +74,10 @@ public class RescueTask {
     public void setAcknowledgedAt(LocalDateTime acknowledgedAt) { this.acknowledgedAt = acknowledgedAt; }
     public LocalDateTime getAssignedAt() { return assignedAt; }
     public void setAssignedAt(LocalDateTime assignedAt) { this.assignedAt = assignedAt; }
+    public RescueZone getZone() { return zone; }
+    public void setZone(RescueZone zone) { this.zone = zone; }
+    public Double getRescueSiteLatitude() { return rescueSiteLatitude; }
+    public void setRescueSiteLatitude(Double rescueSiteLatitude) { this.rescueSiteLatitude = rescueSiteLatitude; }
+    public Double getRescueSiteLongitude() { return rescueSiteLongitude; }
+    public void setRescueSiteLongitude(Double rescueSiteLongitude) { this.rescueSiteLongitude = rescueSiteLongitude; }
 }

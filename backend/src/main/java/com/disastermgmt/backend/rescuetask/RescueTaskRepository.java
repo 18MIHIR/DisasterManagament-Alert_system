@@ -17,4 +17,12 @@ public interface RescueTaskRepository extends JpaRepository<RescueTask, Long> {
     @Query("SELECT rt FROM RescueTask rt WHERE rt.responder.id = :responderId " +
            "AND rt.taskStatus IN ('ASSIGNED', 'ACKNOWLEDGED', 'IN_PROGRESS')")
     List<RescueTask> findActiveTasksByResponder(@Param("responderId") Long responderId);
+
+    List<RescueTask> findByTaskStatusNotOrderByUpdatedAtDesc(TaskStatus excludedStatus);
+
+    List<RescueTask> findAllByOrderByUpdatedAtDesc();
+
+    @Query("SELECT rt.responder.name, COUNT(rt), SUM(CASE WHEN rt.taskStatus = 'COMPLETED' THEN 1 ELSE 0 END) " +
+           "FROM RescueTask rt GROUP BY rt.responder.name")
+    List<Object[]> getResponderCompletionStats();
 }

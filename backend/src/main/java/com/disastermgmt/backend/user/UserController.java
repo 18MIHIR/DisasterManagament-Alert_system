@@ -1,6 +1,7 @@
 package com.disastermgmt.backend.user;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +65,10 @@ public class UserController {
 
     @GetMapping("/responders")
     public ResponseEntity<List<UserProfileResponse>> getResponders(Authentication authentication) {
+        User current = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        if (current.getRole() != UserRole.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         List<User> responders = userRepository.findByRole(UserRole.RESPONDER);
         List<UserProfileResponse> list = responders.stream()
                 .map(u -> new UserProfileResponse(u.getId(), u.getName(), u.getEmail(), u.getRole(), u.getPhone(), u.getRegion()))

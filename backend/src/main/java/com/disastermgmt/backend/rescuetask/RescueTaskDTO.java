@@ -9,10 +9,17 @@ public class RescueTaskDTO {
     private Long disasterId;
     private String disasterTitle;
     private String disasterLocation;
+    private Double disasterLatitude;
+    private Double disasterLongitude;
+    private Long zoneId;
+    private String zoneName;
+    private Double rescueSiteLatitude;
+    private Double rescueSiteLongitude;
     private TaskStatus taskStatus;
     private String description;
     private LocalDateTime updatedAt;
     private LocalDateTime acknowledgedAt;
+    private LocalDateTime assignedAt;
 
     public RescueTaskDTO() {}
 
@@ -36,4 +43,18 @@ public class RescueTaskDTO {
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public LocalDateTime getAcknowledgedAt() { return acknowledgedAt; }
     public void setAcknowledgedAt(LocalDateTime acknowledgedAt) { this.acknowledgedAt = acknowledgedAt; }
+    public Double getDisasterLatitude() { return disasterLatitude; }
+    public void setDisasterLatitude(Double disasterLatitude) { this.disasterLatitude = disasterLatitude; }
+    public Double getDisasterLongitude() { return disasterLongitude; }
+    public void setDisasterLongitude(Double disasterLongitude) { this.disasterLongitude = disasterLongitude; }
+    public Long getZoneId() { return zoneId; }
+    public void setZoneId(Long zoneId) { this.zoneId = zoneId; }
+    public String getZoneName() { return zoneName; }
+    public void setZoneName(String zoneName) { this.zoneName = zoneName; }
+    public Double getRescueSiteLatitude() { return rescueSiteLatitude; }
+    public void setRescueSiteLatitude(Double rescueSiteLatitude) { this.rescueSiteLatitude = rescueSiteLatitude; }
+    public Double getRescueSiteLongitude() { return rescueSiteLongitude; }
+    public void setRescueSiteLongitude(Double rescueSiteLongitude) { this.rescueSiteLongitude = rescueSiteLongitude; }
+    public LocalDateTime getAssignedAt() { return assignedAt; }
+    public void setAssignedAt(LocalDateTime assignedAt) { this.assignedAt = assignedAt; }
 }

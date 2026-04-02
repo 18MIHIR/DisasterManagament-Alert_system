@@ -59,4 +59,10 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
     @Modifying
     @Query("DELETE FROM Disaster d WHERE d.status = :status")
     int deleteByStatus(@Param("status") DisasterStatus status);
+
+    @Query("SELECT d.createdAt FROM Disaster d")
+    List<LocalDateTime> findAllCreationDates();
+
+    @Query("SELECT d.region, d.createdAt, d.resolvedAt, d.status FROM Disaster d WHERE d.region IS NOT NULL")
+    List<Object[]> findAllRegionStats();
 }

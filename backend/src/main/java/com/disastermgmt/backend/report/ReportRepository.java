@@ -9,4 +9,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findBySubmittedByIdOrderBySubmittedAtDesc(Long submittedById);
 
     List<Report> findByResponderIdOrderBySubmittedAtDesc(Long responderId);
+
+    List<Report> findAllByOrderBySubmittedAtDesc();
 }

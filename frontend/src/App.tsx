@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Dashboard from './components/Dashboard';
+import RescueOperations from './components/RescueOperations';
+import Analytics from './pages/Analytics';
 import { AuthResponse, UserProfile, Role } from './types';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
-type View = 'dashboard' | 'auth' | 'profile';
+type View = 'dashboard' | 'auth' | 'profile' | 'rescue' | 'analytics';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -221,6 +223,22 @@ const App: React.FC = () => {
         >
           Dashboard
         </button>
+        {isAuthenticated && (userRole === 'ADMIN' || userRole === 'RESPONDER') && (
+          <button
+            className={`nav-link ${currentView === 'rescue' ? 'active' : ''}`}
+            onClick={() => setCurrentView('rescue')}
+          >
+            Rescue Ops
+          </button>
+        )}
+        {isAuthenticated && (
+          <button
+            className={`nav-link ${currentView === 'analytics' ? 'active' : ''}`}
+            onClick={() => setCurrentView('analytics')}
+          >
+            Analytics
+          </button>
+        )}
         {isAuthenticated ? (
           <>
             <button
@@ -433,7 +451,11 @@ const App: React.FC = () => {
     <div className="app">
       {renderNavbar()}
       <main className="main-content">
-        {currentView === 'dashboard' && <Dashboard userRole={userRole} />}
+        {currentView === 'dashboard' && (
+          <Dashboard userRole={userRole} onOpenRescue={() => setCurrentView('rescue')} />
+        )}
+        {currentView === 'rescue' && <RescueOperations userRole={userRole} />}
+        {currentView === 'analytics' && <Analytics userRole={userRole} />}
         {currentView === 'auth' && renderAuthView()}
         {currentView === 'profile' && renderProfileView()}
       </main>

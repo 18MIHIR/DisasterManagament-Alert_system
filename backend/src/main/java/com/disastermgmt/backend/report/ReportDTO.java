@@ -4,14 +4,20 @@ import java.time.LocalDateTime;
 
 public class ReportDTO {
     private Long id;
+    private String reportKind;
     private Long disasterId;
     private String disasterTitle;
+    private Long rescueTaskId;
     private Long responderId;
     private String responderName;
     private Long submittedById;
     private String submittedByName;
     private String details;
     private String location;
+    private Double latitude;
+    private Double longitude;
+    private boolean hasImage;
+    private String imageData;
     private LocalDateTime submittedAt;
 
     public ReportDTO() {}
@@ -36,4 +42,16 @@ public class ReportDTO {
     public void setLocation(String location) { this.location = location; }
     public LocalDateTime getSubmittedAt() { return submittedAt; }
     public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
+    public String getReportKind() { return reportKind; }
+    public void setReportKind(String reportKind) { this.reportKind = reportKind; }
+    public Long getRescueTaskId() { return rescueTaskId; }
+    public void setRescueTaskId(Long rescueTaskId) { this.rescueTaskId = rescueTaskId; }
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+    public boolean isHasImage() { return hasImage; }
+    public void setHasImage(boolean hasImage) { this.hasImage = hasImage; }
+    public String getImageData() { return imageData; }
+    public void setImageData(String imageData) { this.imageData = imageData; }
 }

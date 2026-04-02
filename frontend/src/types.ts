@@ -47,6 +47,15 @@ export interface Alert {
   region: string;
 }
 
+export interface RescueZone {
+  id: number;
+  name: string;
+  region: string;
+  centerLatitude: number;
+  centerLongitude: number;
+  description: string | null;
+}
+
 export interface RescueTask {
   id: number;
   responderId: number;
@@ -54,20 +63,37 @@ export interface RescueTask {
   disasterId: number;
   disasterTitle: string;
   disasterLocation: string;
+  disasterLatitude: number | null;
+  disasterLongitude: number | null;
+  zoneId: number | null;
+  zoneName: string | null;
+  rescueSiteLatitude: number | null;
+  rescueSiteLongitude: number | null;
   taskStatus: TaskStatus;
   description: string;
   updatedAt: string;
   acknowledgedAt: string | null;
+  assignedAt: string | null;
 }
+
+export type ReportKind = 'EMERGENCY_REQUEST' | 'INCIDENT_REPORT';
 
 export interface Report {
   id: number;
+  reportKind?: ReportKind;
   disasterId: number | null;
   disasterTitle: string | null;
+  rescueTaskId: number | null;
   responderId: number | null;
   responderName: string | null;
+  submittedById?: number;
+  submittedByName?: string | null;
   details: string;
   location: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  hasImage?: boolean;
+  imageData?: string | null;
   submittedAt: string;
 }
 
@@ -110,4 +136,30 @@ export interface DisasterFilters {
   severity: DisasterSeverity | '';
   status: DisasterStatus | '';
   region: string;
+}
+
+export interface DisasterTrendDTO {
+  monthYear: string;
+  count: number;
+}
+
+export interface RegionPerformanceDTO {
+  region: string;
+  avgResponseTimeDays: number;
+  resolutionEfficiency: number;
+  totalDisasters: number;
+}
+
+export interface ResponderPerformanceDTO {
+  responderName: string;
+  totalAssignedTasks: number;
+  completedTasks: number;
+  completionRate: number;
+}
+
+export interface AlertEngagementDTO {
+  totalBroadcasted: number;
+  totalAcknowledged: number;
+  totalIgnored: number;
+  engagementRate: number;
 }

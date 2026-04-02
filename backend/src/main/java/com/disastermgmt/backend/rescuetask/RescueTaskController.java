@@ -26,6 +26,17 @@ public class RescueTaskController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping
+    public ResponseEntity<?> listAllActive() {
+        User user = getCurrentUser();
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user.getRole() != UserRole.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Only Admin can list all rescue tasks"));
+        }
+        return ResponseEntity.ok(rescueTaskService.getActiveTasksForMap());
+    }
+
     @GetMapping("/my-tasks")
     public ResponseEntity<List<RescueTaskDTO>> getMyTasks() {
         User user = getCurrentUser();

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reports")
@@ -31,12 +32,30 @@ public class ReportController {
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if (user.getRole() != UserRole.CITIZEN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new Object() {
-                        public final String error = "Only Citizens can submit emergency help requests";
-                    });
+                    .body(Map.of("error", "Only Citizens can submit emergency help requests"));
         }
-        ReportDTO created = reportService.createReport(request, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        try {
+            ReportDTO created = reportService.createReport(request, user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/incident")
+    public ResponseEntity<?> createIncidentReport(@Valid @RequestBody CreateIncidentReportRequest request) {
+        User user = getCurrentUser();
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user.getRole() != UserRole.RESPONDER) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Only Responders can submit incident reports"));
+        }
+        try {
+            return reportService.createIncidentReport(request, user)
+                    .<ResponseEntity<?>>map(d -> ResponseEntity.status(HttpStatus.CREATED).body(d))
+                    .orElse(ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Invalid incident report")));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
     }
 
     @GetMapping("/my-reports")
@@ -54,6 +73,25 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(reportService.getReportsForResponder(user.getId()));
+    }
+
+    @GetMapping("/audit")
+    public ResponseEntity<?> auditTrail() {
+        User user = getCurrentUser();
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user.getRole() != UserRole.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(reportService.getAllReportsForAudit());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getReport(@PathVariable Long id) {
+        User user = getCurrentUser();
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return reportService.getReportById(id, user)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private User getCurrentUser() {
