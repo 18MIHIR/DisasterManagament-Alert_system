@@ -68,8 +68,11 @@ const RescueOperations: React.FC<RescueOperationsProps> = ({ userRole }) => {
     setError(null);
     try {
       const [z, d] = await Promise.all([rescueZoneApi.list(), disasterApi.getActive()]);
+      const activeOrPending = d.length > 0
+        ? d
+        : (await disasterApi.getAll()).filter(dis => dis.status === 'ACTIVE' || dis.status === 'PENDING');
       setZones(z);
-      setDisasters(d);
+      setDisasters(activeOrPending);
 
       if (isAdmin) {
         const [t, resp, repAudit] = await Promise.all([
@@ -338,7 +341,7 @@ const RescueOperations: React.FC<RescueOperationsProps> = ({ userRole }) => {
                 <option value="">Select disaster</option>
                 {filteredDisasters.map(d => (
                   <option key={d.id} value={d.id}>
-                    {d.title} — {d.location} ({d.region})
+                    {d.title} — {d.location} ({d.region}) [{d.status}]
                   </option>
                 ))}
               </select>

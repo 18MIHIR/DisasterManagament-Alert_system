@@ -5,6 +5,12 @@
 - **Frontend**: React (TypeScript, Create React App)
 - **External APIs**: USGS Earthquake API, NASA EONET, Open-Meteo Weather API
 
+**Secrets & Local Setup**
+- This repository intentionally does NOT contain production secrets (DB passwords, JWT keys).
+- To run the backend locally, copy `backend/src/main/resources/application-local.properties.example` to `backend/src/main/resources/application-local.properties` and replace the placeholder values with your local database password and a secure `app.jwt.secret`.
+- That local file is gitignored (`/backend/src/main/resources/application-local.properties`) so your secrets won't be committed.
+
+
 ### 1. Backend – Running locally
 
 

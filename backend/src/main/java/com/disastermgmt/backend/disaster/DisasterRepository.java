@@ -24,15 +24,17 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
     List<Disaster> findByLocationContainingIgnoreCase(String location);
 
     Optional<Disaster> findByExternalIdAndSource(String externalId, String source);
+    List<Disaster> findAllByCountryIgnoreCase(String country);
 
-    @Query("SELECT d FROM Disaster d WHERE d.status IN :statuses ORDER BY d.eventTime DESC")
+    @Query("SELECT d FROM Disaster d WHERE d.status IN :statuses AND UPPER(d.country) = 'INDIA' ORDER BY d.eventTime DESC")
     List<Disaster> findByStatusIn(@Param("statuses") List<DisasterStatus> statuses);
 
     @Query("SELECT d FROM Disaster d WHERE " +
            "(:type IS NULL OR d.type = :type) AND " +
            "(:severity IS NULL OR d.severity = :severity) AND " +
            "(:status IS NULL OR d.status = :status) AND " +
-           "(:region IS NULL OR LOWER(d.region) LIKE LOWER(CONCAT('%', :region, '%'))) " +
+           "(:region IS NULL OR LOWER(d.region) LIKE LOWER(CONCAT('%', :region, '%'))) AND " +
+           "UPPER(d.country) = 'INDIA' " +
            "ORDER BY d.eventTime DESC")
     List<Disaster> findWithFilters(
         @Param("type") DisasterType type,
@@ -41,19 +43,19 @@ public interface DisasterRepository extends JpaRepository<Disaster, Long> {
         @Param("region") String region
     );
 
-    @Query("SELECT d FROM Disaster d WHERE d.eventTime >= :startTime ORDER BY d.eventTime DESC")
+    @Query("SELECT d FROM Disaster d WHERE d.eventTime >= :startTime AND UPPER(d.country) = 'INDIA' ORDER BY d.eventTime DESC")
     List<Disaster> findRecentDisasters(@Param("startTime") LocalDateTime startTime);
 
-    @Query("SELECT d FROM Disaster d WHERE d.status = 'ACTIVE' ORDER BY d.severity DESC, d.eventTime DESC")
+    @Query("SELECT d FROM Disaster d WHERE d.status = 'ACTIVE' AND UPPER(d.country) = 'INDIA' ORDER BY d.severity DESC, d.eventTime DESC")
     List<Disaster> findActiveDisastersOrderedBySeverity();
 
-    @Query("SELECT d FROM Disaster d WHERE d.status = 'PENDING' ORDER BY d.createdAt ASC")
+    @Query("SELECT d FROM Disaster d WHERE d.status = 'PENDING' AND UPPER(d.country) = 'INDIA' ORDER BY d.createdAt ASC")
     List<Disaster> findPendingDisasters();
 
-    @Query("SELECT COUNT(d) FROM Disaster d WHERE d.status = :status")
+    @Query("SELECT COUNT(d) FROM Disaster d WHERE d.status = :status AND UPPER(d.country) = 'INDIA'")
     Long countByStatus(@Param("status") DisasterStatus status);
 
-    @Query("SELECT COUNT(d) FROM Disaster d WHERE d.type = :type AND d.status = 'ACTIVE'")
+    @Query("SELECT COUNT(d) FROM Disaster d WHERE d.type = :type AND d.status = 'ACTIVE' AND UPPER(d.country) = 'INDIA'")
     Long countActiveByType(@Param("type") DisasterType type);
 
     @Modifying

@@ -27,13 +27,14 @@ public class DisasterService {
     }
 
     public List<DisasterDTO> getAllDisasters() {
-        return disasterRepository.findAll().stream()
+        return disasterRepository.findAllByCountryIgnoreCase("India").stream()
                 .map(DisasterDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public Optional<DisasterDTO> getDisasterById(Long id) {
         return disasterRepository.findById(id)
+                .filter(d -> "India".equalsIgnoreCase(d.getCountry()))
                 .map(DisasterDTO::fromEntity);
     }
 

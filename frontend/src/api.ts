@@ -44,7 +44,9 @@ export const disasterApi = {
   },
 
   async getActive(): Promise<Disaster[]> {
-    const response = await fetch(`${API_BASE_URL}/disasters/active`);
+    const response = await fetch(`${API_BASE_URL}/disasters/active`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.ok) throw new Error('Failed to fetch active disasters');
     return response.json();
   },

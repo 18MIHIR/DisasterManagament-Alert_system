@@ -10,10 +10,14 @@ import com.disastermgmt.backend.user.UserRole;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.disastermgmt.backend.disaster.DisasterType;
+import com.disastermgmt.backend.disaster.DisasterSeverity;
+import com.disastermgmt.backend.disaster.DisasterStatus;
 
 @Service
 public class ReportService {
@@ -45,13 +49,40 @@ public class ReportService {
         report.setLatitude(request.getLatitude());
         report.setLongitude(request.getLongitude());
 
-        if (request.getDisasterId() != null) {
+        Long createdDisasterId = null;
+        if (request.getDisasterId() == null) {
+            // create a minimal pending disaster so admins can see and verify
+            Disaster disaster = new Disaster();
+            String title = (request.getDetails() != null && !request.getDetails().isBlank())
+                    ? (request.getDetails().length() > 80 ? request.getDetails().substring(0, 77) + "..." : request.getDetails())
+                    : "Emergency Report";
+            if (request.getLocation() != null && !request.getLocation().isBlank()) {
+                title = title + " - " + request.getLocation();
+            }
+            disaster.setTitle(title);
+            disaster.setDescription(request.getDetails());
+            disaster.setType(DisasterType.OTHER);
+            disaster.setSeverity(DisasterSeverity.HIGH);
+            disaster.setStatus(DisasterStatus.PENDING);
+            disaster.setLocation(request.getLocation() != null ? request.getLocation() : (submittedBy.getRegion() != null ? submittedBy.getRegion() : "Unknown"));
+            disaster.setRegion(submittedBy.getRegion());
+            disaster.setCountry("India");
+            disaster.setLatitude(request.getLatitude());
+            disaster.setLongitude(request.getLongitude());
+            disaster.setSource("CITIZEN_REPORT");
+            disaster.setEventTime(LocalDateTime.now());
+
+            Disaster savedDisaster = disasterRepository.save(disaster);
+            report.setDisaster(savedDisaster);
+            createdDisasterId = savedDisaster.getId();
+        } else {
             disasterRepository.findById(request.getDisasterId()).ifPresent(report::setDisaster);
+            createdDisasterId = request.getDisasterId();
         }
 
         User nearestResponder = findNearestAvailableResponder(
                 submittedBy.getRegion(),
-                request.getDisasterId()
+                createdDisasterId
         );
         if (nearestResponder != null) {
             report.setResponder(nearestResponder);

@@ -40,6 +40,9 @@ public class AuthService {
         }
 
         UserRole role = request.getRole();
+        if (role == UserRole.ADMIN && userRepository.countByRole(UserRole.ADMIN) > 0) {
+            throw new IllegalArgumentException("Only one admin account is permitted");
+        }
 
         User user = new User(
                 request.getName(),

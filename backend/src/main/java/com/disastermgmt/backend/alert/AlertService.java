@@ -26,10 +26,32 @@ public class AlertService {
     }
 
     public List<AlertDTO> getAlertsForCitizenRegion(String region) {
+        List<Alert> alerts = alertRepository.findAllByOrderByBroadcastTimeDesc();
         if (region == null || region.isBlank()) {
-            return List.of();
+            return alerts.stream()
+                    .map(this::toDTO)
+                    .collect(Collectors.toList());
         }
-        return alertRepository.findAlertsForRegion(region.trim()).stream()
+
+        String normalized = region.trim().toLowerCase();
+        List<AlertDTO> matched = alerts.stream()
+                .filter(alert -> {
+                    String alertRegion = alert.getRegion() != null ? alert.getRegion().trim().toLowerCase() : "";
+                    return alertRegion.contains(normalized)
+                            || normalized.contains(alertRegion)
+                            || alertRegion.contains("india")
+                            || normalized.contains("india");
+                })
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
+        if (!matched.isEmpty()) {
+            return matched;
+        }
+
+        // If no exact regional match exists, return all nationwide alerts so citizens still receive live notification.
+        return alerts.stream()
+                .filter(alert -> alert.getRegion() != null && alert.getRegion().toLowerCase().contains("india"))
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }

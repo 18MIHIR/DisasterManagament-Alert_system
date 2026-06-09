@@ -24,3 +24,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local backend secrets (do not commit)
+/backend/src/main/resources/application-local.properties
