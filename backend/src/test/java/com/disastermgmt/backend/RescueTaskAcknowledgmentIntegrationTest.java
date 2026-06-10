@@ -58,6 +58,7 @@ class RescueTaskAcknowledgmentIntegrationTest {
     void setUp() throws Exception {
         rescueTaskRepository.deleteAll();
         disasterRepository.deleteAll();
+        userRepository.deleteAll();
         String suffix = String.valueOf(System.nanoTime());
         responderEmail = "responder-" + suffix + "@test.com";
 

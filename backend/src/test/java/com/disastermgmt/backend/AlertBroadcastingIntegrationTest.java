@@ -66,6 +66,7 @@ class AlertBroadcastingIntegrationTest {
     void setUp() throws Exception {
         alertRepository.deleteAll();
         disasterRepository.deleteAll();
+        userRepository.deleteAll();
         String suffix = String.valueOf(System.nanoTime());
         adminEmail = "admin-" + suffix + "@test.com";
         citizenEmail = "citizen-" + suffix + "@test.com";
