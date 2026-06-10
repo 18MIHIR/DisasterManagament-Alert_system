@@ -27,3 +27,4 @@ Thumbs.db
 
 # Local backend secrets (do not commit)
 /backend/src/main/resources/application-local.properties
+/backend/src/main/resources/application.properties
